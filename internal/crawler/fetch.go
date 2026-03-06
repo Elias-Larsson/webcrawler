@@ -1,4 +1,4 @@
-package main
+package crawler
 
 import (
 	"fmt"
@@ -7,8 +7,7 @@ import (
 	"golang.org/x/net/html"
 )
 
-func main() {
-	url := "http://localhost:3000"
+func extractHtmlPage(url string) {
 	resp, err := http.Get(url)
 	if err != nil {
 		panic(err)
@@ -20,8 +19,8 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
-
 	extractLinks(doc)
+
 }
 
 func extractLinks(n *html.Node) {
