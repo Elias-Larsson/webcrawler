@@ -1,13 +1,12 @@
 package crawler
 
 import (
-	"fmt"
 	"net/http"
 
 	"golang.org/x/net/html"
 )
 
-func extractHtmlPage(url string) {
+func extractHtmlPage(url string) *html.Node {
 	resp, err := http.Get(url)
 	if err != nil {
 		panic(err)
@@ -19,8 +18,7 @@ func extractHtmlPage(url string) {
 		panic(err)
 	}
 
-	links := extractLinks(doc)
-	fmt.Println(links)
+	return doc
 }
 
 func extractLinks(n *html.Node) []string {
