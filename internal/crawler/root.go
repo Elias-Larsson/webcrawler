@@ -3,10 +3,12 @@ package crawler
 import (
 	"fmt"
 	"net/url"
+	"time"
 )
 
 func Exec() {
 	seedURL := "http://localhost:5500"
+	timer := time.Now()
 
 	seen := make(map[string]struct{})
 	queue := []string{seedURL}
@@ -50,6 +52,13 @@ func Exec() {
 			queue = append(queue, normalized)
 		}
 	}
+	duration := time.Since(timer)
+	fmt.Println()
+	fmt.Printf("%v seen links under the duration %v", len(seen), duration)
+	fmt.Println()
+	fmt.Println("Seen links:")
+for link := range seen {
+    fmt.Printf("- %s\n", link)
+}
 
-	fmt.Println("Seen count:", len(seen))
 }
