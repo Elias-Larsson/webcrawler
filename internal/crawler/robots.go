@@ -2,10 +2,10 @@ package crawler
 
 import (
 	"bufio"
+	"fmt"
 	"net/http"
 	"net/url"
 	"strings"
-	"web/crawl/internal/utils"
 )
 
 type RobotsRules struct {
@@ -13,7 +13,9 @@ type RobotsRules struct {
 	Allowed    []string
 }
 
-func ReadRobotsFile(baseURL string) RobotsRules {
+func readRobotsFile(baseURL string) RobotsRules {
+	applies := false
+	crawlerUA := "aroez-agent"
 	rules := RobotsRules{}
 	res, err := http.Get(baseURL + "/robots.txt")
 
@@ -26,25 +28,33 @@ func ReadRobotsFile(baseURL string) RobotsRules {
 	scanner := bufio.NewScanner(res.Body)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
-
-		if strings.HasPrefix(line, "Disallow:") {
-			path := utils.TrimPrefix(line, "Disallow:")
-
-			if path != "" {
-				rules.Disallowed = append(rules.Disallowed, path)
-			}
-
-		} else if strings.HasPrefix(line, "Allow:") {
-			path := utils.TrimPrefix(line, "Allow:")
-
-			if path != "" {
-				rules.Allowed = append(rules.Allowed, path)
-			}
-
+		if line == "" {
+			continue
 		}
 
+		key, value, ok := strings.Cut(line, ":")
+		if !ok || value == "" || key == "" {
+			continue
+		}
+
+		key, value = strings.TrimSpace(key), strings.TrimSpace(value)
+
+		switch key {
+		case "User-agent":
+			applies = value == "*" || strings.EqualFold(value, crawlerUA)
+
+		case "Disallow":
+			if applies {
+				rules.Disallowed = append(rules.Disallowed, value)
+			}
+
+		case "Allow":
+			if applies {
+				rules.Allowed = append(rules.Allowed, value)
+			}
+		}
 	}
-	
+	fmt.Println("robots rules: ",rules)
 	return rules
 }
 

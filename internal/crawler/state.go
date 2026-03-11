@@ -5,7 +5,7 @@ import "fmt"
 func initState(seedURL string) (map[string]struct{}, []string, RobotsRules) {
 	seen := map[string]struct{}{seedURL: {}}
 	queue := []string{seedURL}
-	robotsRules := ReadRobotsFile(seedURL)
+	robotsRules := readRobotsFile(seedURL)
 	fmt.Println("Seed URL queued:", queue)
 
 	return seen, queue, robotsRules
