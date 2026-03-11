@@ -3,5 +3,5 @@ package main
 import "web/crawl/internal/crawler"
 
 func main() {
-	crawler.Exec()	
+	crawler.RootExec("http://localhost:5500")
 }
