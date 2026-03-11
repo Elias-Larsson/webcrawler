@@ -37,24 +37,24 @@ func readRobotsFile(baseURL string) RobotsRules {
 			continue
 		}
 
-		key, value = strings.TrimSpace(key), strings.TrimSpace(value)
+		key, value = strings.ToLower(strings.TrimSpace(key)), strings.TrimSpace(value)
 
 		switch key {
-		case "User-agent":
+		case "user-agent":
 			applies = value == "*" || strings.EqualFold(value, crawlerUA)
 
-		case "Disallow":
+		case "disallow":
 			if applies {
 				rules.Disallowed = append(rules.Disallowed, value)
 			}
 
-		case "Allow":
+		case "allow":
 			if applies {
 				rules.Allowed = append(rules.Allowed, value)
 			}
 		}
 	}
-	fmt.Println("robots rules: ",rules)
+	fmt.Println("robots ruleset: ", rules)
 	return rules
 }
 
