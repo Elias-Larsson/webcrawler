@@ -2,13 +2,13 @@ package crawler
 
 import "fmt"
 
-func initState(seedURL string) (map[string]struct{}, []string) {
+func initState(seedURL string) (map[string]struct{}, []string, RobotsRules) {
 	seen := map[string]struct{}{seedURL: {}}
 	queue := []string{seedURL}
-
+	robotsRules := ReadRobotsFile(seedURL)
 	fmt.Println("Seed URL queued:", queue)
 
-	return seen, queue
+	return seen, queue, robotsRules
 }
 
 func dequeue(queue []string) (string, []string) {

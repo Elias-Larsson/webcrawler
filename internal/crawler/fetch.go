@@ -7,13 +7,13 @@ import (
 )
 
 func extractHtmlPage(url string) *html.Node {
-	resp, err := http.Get(url)
+	res, err := http.Get(url)
 	if err != nil {
 		panic(err)
 	}
-	defer resp.Body.Close()
+	defer res.Body.Close()
 
-	doc, err := html.Parse(resp.Body)
+	doc, err := html.Parse(res.Body)
 	if err != nil {
 		panic(err)
 	}
