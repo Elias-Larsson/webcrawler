@@ -18,7 +18,7 @@ func RootExec(seedURL string) {
 
 	seen, queue, robotsRules := initState(seedURL)
 
-	for i := 0; i < numWorkers; i++ {
+	for range numWorkers {
 		go worker(jobs, results)
 	}
 
@@ -32,7 +32,6 @@ func RootExec(seedURL string) {
 	for pending > 0 {
 		result := <-results
 		pending--
-
 		for _, link := range result.links {
 			normalized, ok := normalizeLink(result.url, link)
 			if !ok {
@@ -56,10 +55,4 @@ func RootExec(seedURL string) {
 	printSummary(seen, started)
 }
 
-func worker(jobs <-chan string, results chan<- *crawlResult) {
-	for url := range jobs {
-		page := extractHtmlPage(url)
-		links := extractLinks(page)
-		results <- &crawlResult{url: url, links: links}
-	}
-}
+
