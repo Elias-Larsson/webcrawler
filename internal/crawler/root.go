@@ -13,6 +13,9 @@ func RootExec(seedURL string) {
 	started := time.Now()
 	const numWorkers = 10
 
+	seedParsed, _ := url.Parse(seedURL)
+	seedHostname := seedParsed.Hostname()
+
 	jobs := make(chan string)
 	results := make(chan *crawlResult, 8)
 
@@ -33,7 +36,7 @@ func RootExec(seedURL string) {
 		result := <-results
 		pending--
 		for _, link := range result.links {
-			normalized, ok := normalizeLink(result.url, link)
+			normalized, ok := normalizeLink(result.url, link, seedHostname)
 			if !ok {
 				continue
 			}

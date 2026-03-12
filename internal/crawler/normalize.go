@@ -2,7 +2,7 @@ package crawler
 
 import "net/url"
 
-func normalizeLink(currentPage string, rawLink string) (string, bool) {
+func normalizeLink(currentPage string, rawLink string, seedHostname string) (string, bool) {
 	base, err := url.Parse(currentPage)
 	if err != nil {
 		return "", false
@@ -19,5 +19,10 @@ func normalizeLink(currentPage string, rawLink string) (string, bool) {
 	}
 
 	resolved.Fragment = ""
+
+	if resolved.Hostname() != seedHostname {
+		return "", false
+	}
+
 	return resolved.String(), true
 }
