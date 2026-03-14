@@ -1,6 +1,7 @@
 package crawler
 
 import (
+	"net/url"
 	"time"
 )
 
