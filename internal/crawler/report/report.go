@@ -1,11 +1,11 @@
-package crawler
+package report
 
 import (
 	"fmt"
 	"time"
 )
 
-func printSummary(seen map[string]struct{}, started time.Time) {
+func PrintSummary(seen map[string]struct{}, started time.Time) {
 	duration := time.Since(started)
 
 	fmt.Println()

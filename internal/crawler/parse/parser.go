@@ -1,8 +1,8 @@
-package crawler
+package parse
 
 import "golang.org/x/net/html"
 
-func extractLinks(n *html.Node) []string {
+func ExtractLinks(n *html.Node) []string {
 	var links []string
 
 	var walk func(*html.Node)

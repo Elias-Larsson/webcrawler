@@ -3,6 +3,10 @@ package crawler
 import (
 	"net/url"
 	"time"
+
+	"web/crawl/internal/crawler/policy"
+	"web/crawl/internal/crawler/report"
+	"web/crawl/internal/crawler/state"
 )
 
 type crawlResult struct {
@@ -20,7 +24,7 @@ func RootExec(seedURL string) {
 	jobs := make(chan string)
 	results := make(chan *crawlResult, 8)
 
-	seen, queue, robotsRules := initState(seedURL)
+	seen, queue, robotsRules := state.InitState(seedURL)
 
 	for range numWorkers {
 		go worker(jobs, results)
@@ -29,7 +33,7 @@ func RootExec(seedURL string) {
 	pending := 0
 
 	var seed string
-	seed, queue = dequeue(queue)
+	seed, queue = state.Dequeue(queue)
 	jobs <- seed
 	pending++
 
@@ -37,26 +41,26 @@ func RootExec(seedURL string) {
 		result := <-results
 		pending--
 		for _, link := range result.links {
-			normalized, ok := normalizeLink(result.url, link, seedHostname)
+			normalized, ok := policy.NormalizeLink(result.url, link, seedHostname)
 			if !ok {
 				continue
 			}
-			if !isAllowed(robotsRules, normalized) {
+			if !policy.IsAllowed(robotsRules, normalized) {
 				continue
 			}
-			queue = enqueueIfNew(queue, seen, normalized)
+			queue = state.EnqueueIfNew(queue, seen, normalized)
 		}
 
 		for len(queue) > 0 && pending < numWorkers {
 			var next string
-			next, queue = dequeue(queue)
+			next, queue = state.Dequeue(queue)
 			jobs <- next
 			pending++
 		}
 	}
 
 	close(jobs)
-	printSummary(seen, started)
+	report.PrintSummary(seen, started)
 }
 
 

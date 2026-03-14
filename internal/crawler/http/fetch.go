@@ -1,4 +1,4 @@
-package crawler
+package crawlhttp
 
 import (
 	"net/http"
@@ -6,7 +6,7 @@ import (
 	"golang.org/x/net/html"
 )
 
-func extractHtmlPage(url string) *html.Node {
+func ExtractHTMLPage(url string) *html.Node {
 	res, err := http.Get(url)
 	if err != nil {
 		panic(err)

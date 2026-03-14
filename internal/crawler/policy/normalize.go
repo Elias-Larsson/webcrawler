@@ -1,8 +1,8 @@
-package crawler
+package policy
 
 import "net/url"
 
-func normalizeLink(currentPage string, rawLink string, seedHostname string) (string, bool) {
+func NormalizeLink(currentPage string, rawLink string, seedHostname string) (string, bool) {
 	base, err := url.Parse(currentPage)
 	if err != nil {
 		return "", false

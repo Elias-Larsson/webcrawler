@@ -1,4 +1,4 @@
-package crawler
+package policy
 
 import (
 	"bufio"
@@ -13,7 +13,7 @@ type RobotsRules struct {
 	Allowed    []string
 }
 
-func readRobotsFile(baseURL string) RobotsRules {
+func ReadRobotsFile(baseURL string) RobotsRules {
 	applies := false
 	crawlerUA := "aroez-agent"
 	rules := RobotsRules{}
@@ -58,7 +58,7 @@ func readRobotsFile(baseURL string) RobotsRules {
 	return rules
 }
 
-func isAllowed(rules RobotsRules, rawURL string) bool {
+func IsAllowed(rules RobotsRules, rawURL string) bool {
 	u, err := url.Parse(rawURL)
 
 	if err != nil {
